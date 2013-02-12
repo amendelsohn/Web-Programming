@@ -6,7 +6,10 @@
 	<title>Fecesbook</title>
 	<script>
 		function printMessage() {
-			document.getElementById("status").innerHTML=Date();
+			var x = document.getElementById("msg");
+			document.getElementById("status").innerHTML=x.value;
+			
+			x.value="";
 		}
 	
 	</script>
@@ -29,7 +32,7 @@
 	<h3>What are you thinking about? <input type="text" id="msg" name="msg" size="30" onchange="printMessage();"/></h3>
 	<h3>Updates</h3>
 	<div id="status">
-		<p>Hi</p>
+		<p>Messages go here...</p>
 	</div>
 	<div id="yesterday">
 		<h3>Updates from yesterday:</h3>
