@@ -6,13 +6,13 @@
 	<title>Fecesbook</title>
 	<script>
 		function printMessage() {
-			var input = document.getElementById("msg");
-			var status = document.getElementById("status");
-			var para=document.createElement("p");
-			var d = new Date();
-			var dstring = d.getDate() + "/" + d.getMonth() + "/" + d.getFullYear();
+			input = document.getElementById("msg");
+			status = document.getElementById("status");
+			para=document.createElement("p");
+			d = new Date();
+			dstring = d.getDate() + "/" + d.getMonth() + "/" + d.getFullYear();
 			dstring = dstring + " " + d.getHours() + ":" + d.getMinutes() + " - ";
-			var node = document.createTextNode(dstring);
+			node = document.createTextNode(dstring);
 			para.appendChild(node);
 			node = document.createTextNode(" ");
 			para.appendChild(node);
