@@ -9,9 +9,14 @@
 			var input = document.getElementById("msg");
 			var status = document.getElementById("status");
 			var para=document.createElement("p");
-			var node=document.createTextNode(input.value);
+			var node = document.createTextNode(Date());
 			para.appendChild(node);
-			status.appendChild(para);
+			node = document.createTextNode(" ");
+			para.appendChild(node);
+			node=document.createTextNode(input.value);
+			para.appendChild(node);
+			
+			status.insertBefore(para, status.firstChild);
 			input.value="";
 		}
 	
