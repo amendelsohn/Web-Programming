@@ -6,10 +6,13 @@
 	<title>Fecesbook</title>
 	<script>
 		function printMessage() {
-			var x = document.getElementById("msg");
-			document.getElementById("status").innerHTML=x.value;
-			
-			x.value="";
+			var input = document.getElementById("msg");
+			var status = document.getElementById("status");
+			var para=document.createElement("p");
+			var node=document.createTextNode(input.value);
+			para.appendChild(node);
+			status.appendChild(para);
+			input.value="";
 		}
 	
 	</script>
@@ -32,7 +35,6 @@
 	<h3>What are you thinking about? <input type="text" id="msg" name="msg" size="30" onchange="printMessage();"/></h3>
 	<h3>Updates</h3>
 	<div id="status">
-		<p>Messages go here...</p>
 	</div>
 	<div id="yesterday">
 		<h3>Updates from yesterday:</h3>
