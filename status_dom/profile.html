@@ -3,7 +3,13 @@
 <html>
 
 <head>
-<title>Fecesbook</title>
+	<title>Fecesbook</title>
+	<script>
+		function printMessage() {
+			document.getElementById("status").innerHTML=Date();
+		}
+	
+	</script>
 </head>
 
 <body>
@@ -20,9 +26,10 @@
 	</div>
 	<h2 id="fullname">Barney Gumble</h2>
 	<p><img src="https://s3.amazonaws.com/tufts-cs-mchow-images/barneymug.gif" alt="profile" /></p>
-	<h3>What are you thinking about? <input type="text" id="msg" name="msg" size="30" /></h3>
+	<h3>What are you thinking about? <input type="text" id="msg" name="msg" size="30" onchange="printMessage();"/></h3>
 	<h3>Updates</h3>
 	<div id="status">
+		<p>Hi</p>
 	</div>
 	<div id="yesterday">
 		<h3>Updates from yesterday:</h3>
