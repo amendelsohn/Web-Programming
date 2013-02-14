@@ -1,0 +1,10 @@
+body {
+	background-color: black;
+}
+
+#game {
+	padding: 10px;
+	border: solid 4px white;
+	margin: 10px;
+	background-color: gray;
+}
