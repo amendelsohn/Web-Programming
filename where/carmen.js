@@ -1,12 +1,32 @@
 function initialize() {
 	if (navigator.geolocation) {
 		generateMap();
+		getSchedule();
 		addRedLine();
 		navigator.geolocation.getCurrentPosition(disPosition);
-	}
-	else {
+	} else {
 		alert("Geolocation is not supported by your web browser.  What a shame!");
 	}
+}
+
+function getSchedule () {
+	try {
+		request = new XMLHttpRequest();
+	} catch (err) {
+		alert("Sorry, request not supported.")
+	}
+
+	request.open("GET", "http://mbtamap-cedar.herokuapp.com/mapper/redline.json", true);
+	request.send();
+
+    if (request.readyState == 4 && request.status == 200) {
+        schedule = JSON.parse(request.responseText);
+	    console.log(schedule);
+    } else if (request.readyState == 4 && request.status == 304) {
+        schedule = JSON.parse(request.responseText);
+	    console.log(schedule);
+    } else
+    	alert("ERROR: Scheduling data not found!");
 }
 
 function generateMap() {
@@ -14,7 +34,7 @@ function generateMap() {
 	myOptions = {
 		center : latlng,
 		mapTypeId : google.maps.MapTypeId.ROADMAP,
-		zoom : 11
+		zoom : 14
 	};
 	map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 }
@@ -96,20 +116,9 @@ function addRedLine() {
 		markers.push(new google.maps.Marker({position: pt, title: "Braintree Station", icon: tico}));
 			redBranchBraintree.push(pt);
 
-	// try {
-	// 	var request = new XMLHttpRequest();
-	// }
-	// catch (err) {
-	// 	alert("Sorry, Not supported.")
-	// }
-
-	// request.open("GET", "http://messagehub.herokuapp.com/lab8.json", true);
-	// request.send(null);
-	// request.onreadystatechange = callback;
-
 	for (var i = 0; i < markers.length; i++) {
 		markers[i].setMap(map);
-		google.maps.event.addListener(markers[i], 'click', 
+		google.maps.event.addListener(markers[i], 'click',
 			function() {
 				stopName = this.title;
 				wind = new google.maps.InfoWindow();
@@ -142,6 +151,7 @@ function addRedLine() {
 	});
 	redLineBraintree.setMap(map);
 }
+
 
 function disPosition(position) {
 	latlng = new google.maps.LatLng(position.coords.latitude,
