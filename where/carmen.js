@@ -96,8 +96,26 @@ function addRedLine() {
 		markers.push(new google.maps.Marker({position: pt, title: "Braintree Station", icon: tico}));
 			redBranchBraintree.push(pt);
 
+	// try {
+	// 	var request = new XMLHttpRequest();
+	// }
+	// catch (err) {
+	// 	alert("Sorry, Not supported.")
+	// }
+
+	// request.open("GET", "http://messagehub.herokuapp.com/lab8.json", true);
+	// request.send(null);
+	// request.onreadystatechange = callback;
+
 	for (var i = 0; i < markers.length; i++) {
 		markers[i].setMap(map);
+		google.maps.event.addListener(markers[i], 'click', 
+			function() {
+				stopName = this.title;
+				wind = new google.maps.InfoWindow();
+				wind.setContent(this.title);
+				wind.open(map, this);
+			});
 	};
 
 	redLine = new google.maps.Polyline({
@@ -107,6 +125,7 @@ function addRedLine() {
 		strokeWeight: 10
 	});
 	redLine.setMap(map);
+
 	redLineAshmont = new google.maps.Polyline({
 		path: redBranchAshmont,
 		strokeColor: "#FF0000",
@@ -114,6 +133,7 @@ function addRedLine() {
 		strokeWeight: 10
 	});
 	redLineAshmont.setMap(map);
+
 	redLineBraintree = new google.maps.Polyline({
 		path: redBranchBraintree,
 		strokeColor: "#FF0000",
