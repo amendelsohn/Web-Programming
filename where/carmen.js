@@ -3,7 +3,7 @@ function initialize() {
 		generateMap();
 		getSchedule();
 		addRedLine();
-		navigator.geolocation.getCurrentPosition(disPosition);
+		navigator.geolocation.getCurrentPosition(dispPosition);
 	} else {
 		alert("Geolocation is not supported by your web browser.  What a shame!");
 	}
@@ -37,7 +37,7 @@ function generateMap() {
 }
 
 function addRedLine() {
-	var markers = [];
+	markers = [];
 	var redStations = [];
 	var redBranchBraintree = [];
 	var redBranchAshmont = [];
@@ -214,7 +214,7 @@ function makeSchedule(stop) {
 }
 
 
-function disPosition(position) {
+function dispPosition(position) {
 	latlng = new google.maps.LatLng(position.coords.latitude,
 									position.coords.longitude)
 	map.panTo(latlng);
@@ -227,11 +227,34 @@ function disPosition(position) {
 
 	marker = new google.maps.Marker(markerOpts);
 
+	poscontent = "<h1>YOU ARE HERE</h1>"
+	closest = getClosestStop(position);
+	console.log("closest: " + closest);
+	poscontent += "<p>The closest station to you is " + closest + " which is approximately " + minDist + " miles away from you.</p>";
+
 	var windowOpts = {
-		content: "<p>YOU ARE HERE</p>"
+		content: poscontent
 	}
 
 	wind = new google.maps.InfoWindow(windowOpts);
 	wind.open(map, marker);
 }
 
+function getClosestStop (position) {
+	var close = "";
+	minDist = 25000;
+	for (i = 0; i < markers.length; i++) {
+		var d = google.maps.geometry.spherical.computeDistanceBetween(latlng, markers[i].pt)
+		d = mtomi(d);
+		if (d <= minDist) {
+			minDist = d;
+			close = markers[i].title;
+		}
+	}
+	console.log(close);
+	return markers;
+}
+
+function mtomi (dist) {
+	return dist*.00062137119;
+}
