@@ -19,14 +19,11 @@ function getSchedule () {
 	request.open("GET", "http://mbtamap-cedar.herokuapp.com/mapper/redline.json", true);
 	request.send();
 
-    if (request.readyState == 4 && request.status == 200) {
-        schedule = JSON.parse(request.responseText);
-	    console.log(schedule);
-    } else if (request.readyState == 4 && request.status == 304) {
-        schedule = JSON.parse(request.responseText);
-	    console.log(schedule);
-    } else
-    	alert("ERROR: Scheduling data not found!");
+	request.onreadystatechange = function () {
+		    if (request.readyState == 4 && request.status == 200) {
+		        trains = JSON.parse(request.responseText);
+		    } 
+		}
 }
 
 function generateMap() {
@@ -34,7 +31,7 @@ function generateMap() {
 	myOptions = {
 		center : latlng,
 		mapTypeId : google.maps.MapTypeId.ROADMAP,
-		zoom : 14
+		zoom : 11
 	};
 	map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 }
@@ -116,13 +113,57 @@ function addRedLine() {
 		markers.push(new google.maps.Marker({position: pt, title: "Braintree Station", icon: tico}));
 			redBranchBraintree.push(pt);
 
+	stations = []
+	stations["RALEN"] = {"direction":"NB", "name":"Alewife Station", "lat":"42.395428", "lng":"-71.142483"}
+		stations["RDAVN"] = {"direction":"NB", "name":"Davis Station", "lat":"42.39674", "lng":"-71.121815"}
+		stations["RDAVS"] = {"direction":"SB", "name":"Davis Station", "lat":"42.39674", "lng":"-71.121815"}
+		stations["RPORN"] = {"direction":"NB", "name":"Porter Square Station", "lat":"42.3884", "lng":"-71.119149"}
+		stations["RPORS"] = {"direction":"SB", "name":"Porter Square Station", "lat":"42.3884", "lng":"-71.119149"}
+		stations["RHARN"] = {"direction":"NB", "name":"Harvard Square Station", "lat":"42.373362", "lng":"-71.118956"}
+		stations["RHARS"] = {"direction":"SB", "name":"Harvard Square Station", "lat":"42.373362", "lng":"-71.118956"}
+		stations["RCENN"] = {"direction":"NB", "name":"Central Square Station", "lat":"42.365486", "lng":"-71.103802"}
+		stations["RCENS"] = {"direction":"SB", "name":"Central Square Station", "lat":"42.365486", "lng":"-71.103802"}
+		stations["RKENN"] = {"direction":"NB", "name":"Kendall/MIT Station", "lat":"42.36249079", "lng":"-71.08617653"}
+		stations["RKENS"] = {"direction":"SB", "name":"Kendall/MIT Station", "lat":"42.36249079", "lng":"-71.08617653"}
+		stations["RMGHN"] = {"direction":"NB", "name":"Charles/MGH Station", "lat":"42.361166", "lng":"-71.070628"}
+		stations["RMGHS"] = {"direction":"SB", "name":"Charles/MGH Station", "lat":"42.361166", "lng":"-71.070628"}
+		stations["RPRKN"] = {"direction":"NB", "name":"Park St. Station", "lat":"42.35639457", "lng":"-71.0624242"}
+		stations["RPRKS"] = {"direction":"SB", "name":"Park St. Station", "lat":"42.35639457", "lng":"-71.0624242"}
+		stations["RDTCN"] = {"direction":"NB", "name":"Downtown Crossing Station", "lat":"42.355518", "lng":"-71.060225"}
+		stations["RDTCS"] = {"direction":"SB", "name":"Downtown Crossing Station", "lat":"42.355518", "lng":"-71.060225"}
+		stations["RSOUN"] = {"direction":"NB", "name":"South Station", "lat":"42.352271", "lng":"-71.055242"}
+		stations["RSOUS"] = {"direction":"SB", "name":"South Station", "lat":"42.352271", "lng":"-71.055242"}
+		stations["RBRON"] = {"direction":"NB", "name":"Broadway Station", "lat":"42.342622", "lng":"-71.056967"}
+		stations["RBROS"] = {"direction":"SB", "name":"Broadway Station", "lat":"42.342622", "lng":"-71.056967"}
+		stations["RANDN"] = {"direction":"NB", "name":"Andrew Station", "lat":"42.330154", "lng":"-71.057655"}
+		stations["RANDS"] = {"direction":"SB", "name":"Andrew Station", "lat":"42.330154", "lng":"-71.057655"}
+		stations["RJFKN"] = {"direction":"NB", "name":"JFK/UMass Station", "lat":"42.320685", "lng":"-71.052391"}
+		stations["RJFKS"] = {"direction":"SB", "name":"JFK/UMass Station", "lat":"42.320685", "lng":"-71.052391"}
+		stations["RSAVN"] = {"direction":"NB", "name":"Savin Hill Station", "lat":"42.31129", "lng":"-71.053331"}
+		stations["RSAVS"] = {"direction":"SB", "name":"Savin Hill Station", "lat":"42.31129", "lng":"-71.053331"}
+		stations["RFIEN"] = {"direction":"NB", "name":"Fields Corner Station", "lat":"42.300093", "lng":"-71.061667"}
+		stations["RFIES"] = {"direction":"SB", "name":"Fields Corner Station", "lat":"42.300093", "lng":"-71.061667"}
+		stations["RSHAN"] = {"direction":"NB", "name":"Shawmut Station", "lat":"42.29312583", "lng":"-71.06573796"}
+		stations["RSHAS"] = {"direction":"SB", "name":"Shawmut Station", "lat":"42.29312583", "lng":"-71.06573796"}
+		stations["RASHS"] = {"direction":"SB", "name":"Ashmont Station", "lat":"42.284652", "lng":"-71.064489"}
+		stations["RNQUN"] = {"direction":"NB", "name":"North Quincy Station", "lat":"42.275275", "lng":"-71.029583"}
+		stations["RNQUS"] = {"direction":"SB", "name":"North Quincy Station", "lat":"42.275275", "lng":"-71.029583"}
+		stations["RWOLN"] = {"direction":"NB", "name":"Wollaston Station", "lat":"42.2665139", "lng":"-71.0203369"}
+		stations["RWOLS"] = {"direction":"SB", "name":"Wollaston Station", "lat":"42.2665139", "lng":"-71.0203369"}
+		stations["RQUCN"] = {"direction":"NB", "name":"Quincy Center Station", "lat":"42.251809", "lng":"-71.005409"}
+		stations["RQUCS"] = {"direction":"SB", "name":"Quincy Center Station", "lat":"42.251809", "lng":"-71.005409"}
+		stations["RQUAN"] = {"direction":"NB", "name":"Quincy Adams Station", "lat":"42.233391", "lng":"-71.007153"}
+		stations["RQUAS"] = {"direction":"SB", "name":"Quincy Adams Station", "lat":"42.233391", "lng":"-71.007153"}
+		stations["RBRAS"] = {"direction":"SB", "name":"Braintree Station", "lat":"42.2078543", "lng":"-71.0011385"}
+
 	for (var i = 0; i < markers.length; i++) {
 		markers[i].setMap(map);
 		google.maps.event.addListener(markers[i], 'click',
 			function() {
 				stopName = this.title;
 				wind = new google.maps.InfoWindow();
-				wind.setContent(this.title);
+				makeSchedule(this);
+				wind.setContent(content);
 				wind.open(map, this);
 			});
 	};
@@ -152,6 +193,26 @@ function addRedLine() {
 	redLineBraintree.setMap(map);
 }
 
+function makeSchedule(stop) {
+	if (request.readyState != 4 || request.status != 200)
+		console.log("ERROR: Scheduling data not found!");
+
+	content = "<h1>"+stop["title"]+"</h1>";
+
+	foundtrain = false;
+	
+	content += '<table id="schedule"><tr><th>Line</th><th>Trip #</th><th>Direction</th><th>Time Remaining</th></tr>';
+	for (var i = 0; i < trains.length; i++) {
+		if (stations[trains[i]["PlatformKey"]].name == stop["title"] && trains[i].InformationType == "Predicted") {
+			foundtrain = true;
+			content += '<tr><td>' + trains[i]["Line"] + '</td><td>' + trains[i].Trip + '</td><td>' + stations[trains[i].PlatformKey].direction + '</td><td>' + trains[i].TimeRemaining + '</td></tr>';
+		}
+	};
+	if (!foundtrain)
+		content += "<p>No schedule of upcoming trains for this station.</p>";
+	content += "</table>";
+}
+
 
 function disPosition(position) {
 	latlng = new google.maps.LatLng(position.coords.latitude,
@@ -173,3 +234,4 @@ function disPosition(position) {
 	wind = new google.maps.InfoWindow(windowOpts);
 	wind.open(map, marker);
 }
+
