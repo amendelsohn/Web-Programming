@@ -3,6 +3,7 @@ function initialize() {
 		generateMap();
 		getSchedule();
 		addRedLine();
+		getCarmenWaldo();
 		navigator.geolocation.getCurrentPosition(dispPosition);
 	} else {
 		alert("Geolocation is not supported by your web browser.  What a shame!");
@@ -24,6 +25,42 @@ function getSchedule () {
 		        trains = JSON.parse(request.responseText);
 		    } 
 		}
+}
+
+function getCarmenWaldo () {
+	try {
+		CWrequest = new XMLHttpRequest();
+	} catch (err) {
+		alert("Sorry, request not supported.")
+	}
+
+	CWrequest.open("GET", "http://messagehub.herokuapp.com/a3.json", true);
+	CWrequest.send();
+
+	CWrequest.onreadystatechange = function () {
+		    if (CWrequest.readyState == 4 && CWrequest.status == 200) {
+		        CW = JSON.parse(CWrequest.responseText);
+		        dispCW();
+		    } 
+		}
+}
+
+function dispCW () {
+	for (var i = 0; i < CW.length; i++) {
+		if (CW[i].name == "Waldo" || CW[i].name == "Carmen Sandiego") {
+			if (CW[i].name == "Waldo")
+				img = "waldo.png";
+			else
+				img = "carmen.png";
+
+			console.log (CW[i]);
+			
+			pos = new google.maps.LatLng(CW[i].loc.latitude, CW[i].loc.longitude);
+			mark = new google.maps.Marker({position: pos, title: CW[i].name, icon: img});
+
+			mark.setMap(map);
+		}
+	};
 }
 
 function generateMap() {
