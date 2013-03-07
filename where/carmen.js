@@ -14,7 +14,7 @@ function getSchedule () {
 	try {
 		request = new XMLHttpRequest();
 	} catch (err) {
-		alert("Sorry, request not supported.")
+		alert("Sorry, request not supported.");
 	}
 
 	request.open("GET", "http://mbtamap-cedar.herokuapp.com/mapper/redline.json", true);
@@ -55,8 +55,22 @@ function dispCW () {
 			
 			pos = new google.maps.LatLng(CW[i].loc.latitude, CW[i].loc.longitude);
 			mark = new google.maps.Marker({position: pos, title: CW[i].name, icon: img});
-
 			mark.setMap(map);
+
+			poscontent = "<h1>"+CW[i].name+"</h1>";
+
+			dist = google.maps.geometry.spherical.computeDistanceBetween(latlng, pos);
+			dist = mtomi(dist);
+
+			poscontent += "<p>You are " + dist + " miles away from " + CW[i].name + ".</p>";
+
+			var windowOpts = {
+				content: poscontent
+			}
+
+			wind = new google.maps.InfoWindow(windowOpts);
+			wind.open(map, mark);
+
 		}
 	};
 }
@@ -262,7 +276,7 @@ function dispPosition(position) {
 
 	marker = new google.maps.Marker(markerOpts);
 
-	poscontent = "<h1>YOU ARE HERE</h1>"
+	poscontent = "<h1>YOU ARE HERE</h1>";
 	closest = getClosestStop(position);
 	poscontent += "<p>The closest station to you is " + closest + " which is approximately " + minDist + " miles away from you.</p>";
 
