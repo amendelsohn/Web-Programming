@@ -37,14 +37,14 @@ function generateMap() {
 }
 
 function addRedLine() {
-	markers = [];
 	var redStations = [];
 	var redBranchBraintree = [];
 	var redBranchAshmont = [];
 
 	tico = "t_icon.png";
 
-	pt = new google.maps.LatLng(42.395428, -71.142483);
+	markers = [];
+		pt = new google.maps.LatLng(42.395428, -71.142483);
 		markers.push(new google.maps.Marker({position: pt, title: "Alewife Station", icon: tico}));
 			redStations.push(pt);
 		pt = new google.maps.LatLng(42.39674, -71.121815);
@@ -114,7 +114,7 @@ function addRedLine() {
 			redBranchBraintree.push(pt);
 
 	stations = []
-	stations["RALEN"] = {"direction":"NB", "name":"Alewife Station", "lat":"42.395428", "lng":"-71.142483"}
+		stations["RALEN"] = {"direction":"NB", "name":"Alewife Station", "lat":"42.395428", "lng":"-71.142483"}
 		stations["RDAVN"] = {"direction":"NB", "name":"Davis Station", "lat":"42.39674", "lng":"-71.121815"}
 		stations["RDAVS"] = {"direction":"SB", "name":"Davis Station", "lat":"42.39674", "lng":"-71.121815"}
 		stations["RPORN"] = {"direction":"NB", "name":"Porter Square Station", "lat":"42.3884", "lng":"-71.119149"}
@@ -244,15 +244,14 @@ function getClosestStop (position) {
 	var close = "";
 	minDist = 25000;
 	for (i = 0; i < markers.length; i++) {
-		var d = google.maps.geometry.spherical.computeDistanceBetween(latlng, markers[i].pt)
+		var d = google.maps.geometry.spherical.computeDistanceBetween(latlng, markers[i].position)
 		d = mtomi(d);
 		if (d <= minDist) {
 			minDist = d;
 			close = markers[i].title;
 		}
 	}
-	console.log(close);
-	return markers;
+	return close;
 }
 
 function mtomi (dist) {
