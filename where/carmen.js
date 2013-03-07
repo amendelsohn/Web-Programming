@@ -52,8 +52,6 @@ function dispCW () {
 				img = "waldo.png";
 			else
 				img = "carmen.png";
-
-			console.log (CW[i]);
 			
 			pos = new google.maps.LatLng(CW[i].loc.latitude, CW[i].loc.longitude);
 			mark = new google.maps.Marker({position: pos, title: CW[i].name, icon: img});
@@ -266,7 +264,6 @@ function dispPosition(position) {
 
 	poscontent = "<h1>YOU ARE HERE</h1>"
 	closest = getClosestStop(position);
-	console.log("closest: " + closest);
 	poscontent += "<p>The closest station to you is " + closest + " which is approximately " + minDist + " miles away from you.</p>";
 
 	var windowOpts = {
