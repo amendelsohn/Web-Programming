@@ -22,8 +22,10 @@ function move_frog (input) {
 	input = input.keyCode;
 	if (input == 37 && frog.x > 20)
 		frog.x -= 28;
-	else if (input == 38 && frog.y > 20)
+	else if (input == 38 && frog.y > 20) {
+		score += 10;
 		frog.y -= 33.5;
+	}
 	else if (input == 39 && frog.x < 350)
 		frog.x += 28;
 	else if (input == 40 && frog.y < 485)
@@ -60,18 +62,18 @@ function draw_movables() {
 		ctx.drawImage(img, l.sx, l.sy, l.w, l.h, l.x, l.y, l.w, l.h);
 	}
 
-	ctx.drawImage(img, 45, 367, 25, 25, frog.x, frog.y, 25, 25); //frog
+	ctx.drawImage(img, 45, 367, frog.w, frog.h, frog.x, frog.y, frog.w, frog.h); //frog
 	draw_footer();	
 }
 
 function init_game_vals() {
 	score = 0;
 	high_score = 0;
-	lives = 3;
+	lives = 5;
 	game_over = false;
 	level = 1;
 	time = 100;
-	frog = {"x":185, "y":485};
+	frog = {"x":185, "y":485, "w":25, "h":25};
 	vehicles = [
 			//yellow racer
 				{"sx":80, "sy":264, "w":24, "h":27, "x":80,  "y":452, "spd":-.6},
@@ -133,6 +135,69 @@ function update_game_vals() {
 		if (logs[i].x <= 0 - logs[i].w)
 			logs[i].x = 400;
 	};
+
+	check_frog_collision();
+}
+
+// If frog's bottom right x coordinate is less than car's top left x coordinate
+// There is no collision
+// If frog's top left x is greater than car's bottom right x
+// There is no collision
+// If frog's top left y is greater than car's bottom right y
+// There is no collision
+// If frog's bottom right y is less than car's top left y
+// There is no collision
+
+function check_frog_collision () {
+	for (var i = 0; i < vehicles.length; i++) {
+		if (collides(vehicles[i]))
+			frog_death();
+	};
+
+	if (frog.y < 280) {
+		console.log("checking");
+		var death = true;
+		for (var i = 0; i < logs.length; i++) {
+			if (collides(logs[i])) {
+				death = false;
+				console.log("he lives!");
+			}
+		};
+		if (death)
+			frog_death();
+	}
+}
+
+function collides (obj) {
+	f = {	//frog
+		"tlx": frog.x,
+		"tly": frog.y,
+		"brx": frog.x + frog.w,
+		"bry": frog.y + frog.h,
+	}
+	b = {	//object
+		"tlx": obj.x,
+		"tly": obj.y,
+		"brx": obj.x + obj.w,
+		"bry": obj.y + obj.h,
+	}
+
+	if (! ((f.brx < b.tlx) || (f.tlx > b.brx)
+		|| (f.tly > b.bry) || (f.bry < b.tly))) {
+		return true;
+	}
+	return false;
+}
+
+function frog_death () {
+	lives--;
+	frog.x = 185;
+	frog.y = 485;
+	if (lives <= 0) {
+		alert("Game Over!");
+		init_game_vals();
+	}
+
 }
 
 function draw_footer() {
@@ -147,5 +212,5 @@ function draw_footer() {
 	
 	ctx.font="20px Helvetica";
 	ctx.fillStyle="rgb(0,255,0)";
-	ctx.fillText("Level "+level, 90, 535);
+	ctx.fillText("Level "+level, 160, 535);
 }
