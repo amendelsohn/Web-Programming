@@ -73,6 +73,7 @@ function init_game_vals() {
 	game_over = false;
 	level = 1;
 	time = 100;
+	home = [false, false, false, false, false];
 	frog = {"x":185, "y":485, "w":25, "h":25};
 	vehicles = [
 			//yellow racer
@@ -140,28 +141,19 @@ function update_game_vals() {
 	check_frog_collision();
 }
 
-// If frog's bottom right x coordinate is less than car's top left x coordinate
-// There is no collision
-// If frog's top left x is greater than car's bottom right x
-// There is no collision
-// If frog's top left y is greater than car's bottom right y
-// There is no collision
-// If frog's bottom right y is less than car's top left y
-// There is no collision
-
 function check_frog_collision () {
 	for (var i = 0; i < vehicles.length; i++) {
 		if (collides(vehicles[i]))
 			frog_death();
 	};
 
-	if (frog.y < 280) {
+	if (frog.y < 280 && frog.y > 83) {
 		console.log("checking");
 		var death = true;
 		for (var i = 0; i < logs.length; i++) {
 			if (collides(logs[i])) {
 				death = false;
-				console.log("he lives!");
+				frog.x += logs[i].spd;
 			}
 		};
 		if (death)
