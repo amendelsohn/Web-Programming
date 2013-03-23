@@ -7,7 +7,7 @@ function start_game() {
 		init_game_vals();
 		draw_all();
 		start_controls();
-		setInterval(game_loop, 12);
+		setInterval(game_loop, 16);
 	}
 	else {
 		alert('Sorry, canvas is not supported on your browser!');
