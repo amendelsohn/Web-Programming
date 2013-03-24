@@ -7,7 +7,7 @@ function start_game() {
 		init_game_vals();
 		draw_all();
 		start_controls();
-		setInterval(game_loop, 16);
+		setInterval(game_loop, speed);
 	}
 	else {
 		alert('Sorry, canvas is not supported on your browser!');
@@ -23,13 +23,29 @@ function move_frog (input) {
 	if (input == 37 && frog.x > 20)
 		frog.x -= 28;
 	else if (input == 38 && frog.y > 20) {
-		score += 10;
+		add_score(10);
 		frog.y -= 33.5;
+		if (frog.y <= 83) {
+			check_home();
+		}
 	}
 	else if (input == 39 && frog.x < 350)
 		frog.x += 28;
 	else if (input == 40 && frog.y < 485)
 		frog.y += 33.5;
+	console.log(frog.x +", "+frog.y);
+}
+
+function check_home () {
+	var x = frog.x;
+	for (var i = 0; i < 5; i++) {	
+		if (x > 5+(85*i) && x < 40+(85*i)) {
+			add_score(50);
+			lives++;
+			frog_death();
+			home[i] = true;
+		}
+	}
 }
 
 function game_loop() {
@@ -48,6 +64,11 @@ function draw_all() {
 	ctx.drawImage(img, 0, 0, 399, 100, 0, 0, 399, 100); //header title+green
 	ctx.drawImage(img, 0, 119, 399, 34, 0, 280, 399, 34); //roadside-mid
 	ctx.drawImage(img, 0, 119, 399, 34, 0, 480, 399, 34); //roadside-bot
+
+	for (var i = 0; i < home.length; i++) {
+		if (home[i])
+			ctx.drawImage(img, 45, 367, frog.w, frog.h, 16+85*i, 78, frog.w, frog.h);
+	};
 	
 	draw_movables();
 }
@@ -67,13 +88,14 @@ function draw_movables() {
 }
 
 function init_game_vals() {
+	speed = 18;
 	score = 0;
 	high_score = 0;
 	lives = 5;
 	game_over = false;
 	level = 1;
 	time = 100;
-	home = [false, false, false, false, false];
+	home = [false, false, false, false, false]; //false
 	frog = {"x":185, "y":485, "w":25, "h":25};
 	vehicles = [
 			//yellow racer
@@ -127,18 +149,43 @@ function init_game_vals() {
 
 function update_game_vals() {
 	for (var i = 0; i < vehicles.length; i++) {
-		vehicles[i].x = (vehicles[i].x + vehicles[i].spd) % 400;
+		vehicles[i].x = (vehicles[i].x + vehicles[i].spd*(1+level/10)) % 400;
 		if (vehicles[i].x <= 0 - vehicles[i].w)
 			vehicles[i].x = 400;
 	};
 
 	for (var i = 0; i < logs.length; i++) {
-		logs[i].x = (logs[i].x + logs[i].spd) % 400;
+		logs[i].x = (logs[i].x + logs[i].spd*(1+level/10)) % 400;
 		if (logs[i].x <= 0 - logs[i].w)
 			logs[i].x = 400;
 	};
 
 	check_frog_collision();
+
+	check_lv_up();
+}
+
+function check_lv_up () {
+	var lvup = true;
+	for (var i = 0; i < home.length; i++) {
+		if (!home[i])
+			lvup = false;
+	};
+
+	if (lvup) {
+		home = [false, false, false, false, false];
+		level++;
+		add_score(1000);
+		lives++;
+		frog_death();
+	}
+}
+
+function add_score(x) {
+	console.log(score%10000 +", "+ (score+x)%10000 +", " + lives)
+	if (score%10000 > 5000 && (score+x)%10000 < 5000 && lives < 5)
+		lives++;
+	score += x;
 }
 
 function check_frog_collision () {
@@ -148,12 +195,11 @@ function check_frog_collision () {
 	};
 
 	if (frog.y < 280 && frog.y > 83) {
-		console.log("checking");
 		var death = true;
 		for (var i = 0; i < logs.length; i++) {
 			if (collides(logs[i])) {
 				death = false;
-				frog.x += logs[i].spd;
+				frog.x += logs[i].spd*(1+level/10);
 			}
 		};
 		if (death)
