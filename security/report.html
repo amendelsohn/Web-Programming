@@ -18,20 +18,20 @@
 		<p>Provide an overview of all the security issues you identified. This section should be written for non-technical managers who do not have technical expertise and do not have time to read the entire document. Write this section using lay language.</p>
 	<h2>Issues Found</h2>
 		<ol>
-			<li><h3>Issue 1</h3>
+			<li><h3>Cross-Site Scripting</h3>
 				<ul>
-				<li>Location - </li>
-				<li>Severity - </li>
-				<li>Description - </li>
-				<li>Resolution - </li>
+				<li>Location - web.js line 44, 52, 95</li>
+				<li>Severity - High. This allows users to run script, potentially corrupting app and/or database.</li>
+				<li>Description - User input is simply taken into the database as-is and subsequently displayed on the reults page. The content could contain anything from simple image or html tag to an entire script which will be executed on pageload. A non-malicious example is depicted below.</li>
+				<li>Resolution - Sanitize input! This could be accomplished by escaping or disallowing special characters, or by checking against a whitelist.</li>
 				</ul>
 			</li>
-			<li><h3>Issue 2</h3>
+			<li><h3>Mongo credentials in plaintext</h3>
 				<ul>
-				<li>Location - </li>
-				<li>Severity - </li>
-				<li>Description - </li>
-				<li>Resolution - </li>
+				<li>Location - web.js line 11</li>
+				<li>Severity - High. Credentials in plaintext is never good. Also could allow anyone with access to source to access and edit entire database. This issue is more severe if that password is not unique to mongo and is used for other sites/services.</li>
+				<li>Description - The mongodb url includes the mongo user and password login in plain text.</li>
+				<li>Resolution - Use the express process environment urls from lines 8 and 9. This should be sufficient to connect, there is no need to include the url in the document.</li>
 				</ul>
 			</li>
 			<li><h3>Issue 3</h3>
@@ -53,15 +53,4 @@
 		</ol>
 </body>
 </html>
-
-Introduction - Provide a description of the product and what you were hired to do
-Methodology - Describe your methodology pen testing the application, including the tools that you used
-Abstract of Findings - Provide an overview of all the security issues you identified. This section should be written for non-technical managers who do not have technical expertise and do not have time to read the entire document. Write this section using lay language.
-Issues Found - For each issue that you find, document:
-
-    Issue (e.g., database injection, really bad programming practice)
-    Location / page where issue was found
-    Severity of issue (e.g., low, medium , or high). Justify your answer.
-    Description of issue. How did you find it? A screenshot of problem is excellent.
-    Resolution. How did you resolve the issue? Show code if possible.
 
