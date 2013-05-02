@@ -11,18 +11,22 @@
 	<p>by Andrew Mendelsohn</p>
 
 	<h2>Introduction</h2>
-		<p>Provide a description of the product and what you were hired to do</p>
+		<p>I was assigned the job of finding security vulnerabilities in Brett Cadigan's scorecenter application. The application gathers highscores from web games and displays the results.</p>
+
 	<h2>Methodology</h2>
-		<p>Describe your methodology pen testing the application, including the tools that you used</p>
+		<p>I began by testing the app with some common issues such as abusive or large input, then looked into the actual source and found bugs and other vulnerabilities that could only be seen and exploited with knowledge of the actual code.</p>
+
 	<h2>Abstract</h2>
-		<p>Provide an overview of all the security issues you identified. This section should be written for non-technical managers who do not have technical expertise and do not have time to read the entire document. Write this section using lay language.</p>
+		<p>The issues I found in this application allow malicious users to edit and even distroy its database. There are multiple security holes which allow access to the application's internal records. Many of these could be solved with the handling and sanitation of bad user input. The application is currently highly vulnerable and these issues should be resolved before putting the application out for use.</p>
+
 	<h2>Issues Found</h2>
 		<ol>
 			<li><h3>Cross-Site Scripting</h3>
 				<ul>
-				<li>Location - web.js line 44, 52, 95</li>
+				<li>Location - web.js lines 44, 52, 95</li>
 				<li>Severity - High. This allows users to run script, potentially corrupting app and/or database.</li>
 				<li>Description - User input is simply taken into the database as-is and subsequently displayed on the reults page. The content could contain anything from simple image or html tag to an entire script which will be executed on pageload. A non-malicious example is depicted below.</li>
+				<img id="wat" src="wat.png">
 				<li>Resolution - Sanitize input! This could be accomplished by escaping or disallowing special characters, or by checking against a whitelist.</li>
 				</ul>
 			</li>
@@ -34,23 +38,27 @@
 				<li>Resolution - Use the express process environment urls from lines 8 and 9. This should be sufficient to connect, there is no need to include the url in the document.</li>
 				</ul>
 			</li>
-			<li><h3>Issue 3</h3>
+			<li><h3>Large Input</h3>
 				<ul>
-				<li>Location - </li>
-				<li>Severity - </li>
-				<li>Description - </li>
-				<li>Resolution - </li>
+				<li>Location - web.js lines 46, 95</li>
+				<li>Severity - Moderate-High. This can potentially deny service to the entire site, though past data may be maintained.</li>
+				<li>Description - There is no limit to the size of a submission, and a large enough entry will crash the database and freeze on pageload of /</li>
+				<li>Resolution - Put a cap on the size of input. Even a simple length maximum should work. This shouldn't be a problem, as reasonable use of the application should not exceed say 1000s of characters.</li>
 				</ul>
 			</li>
-			<li><h3>Issue 4 - (e.g., database injection, really bad programming practice)</h3>
+			<li><h3>Cross-Origin sharing</h3>
 				<ul>
-				<li>Location - / page where issue was found</li>
-				<li>Severity - (e.g., low, medium , or high). Justify your answer.</li>
-				<li>Description - How did you find it? A screenshot of problem is excellent.</li>
-				<li>Resolution - How did you resolve the issue? Show code if possible.</li>
+				<li>Location - web.js line 37</li>
+				<li>Severity - Low-Moderate. This may defeat the purpose and intended use of the application, but is unlikely to be otherwise dangerous or destructive.</li>
+				<li>Description - The application allows get/post requests from any source. This means anyone can post their "score" to the database. Posting is not limited to games, so it may be that not every score in the database came from a real game.</li>
+				<li>Resolution - Ensure that the source of your post requests are approved by the application. This could be accomplished using either a whitelist or by requiring registered API keys to post.</li>
 				</ul>
 			</li>
 		</ol>
+
+	<h2>Conclusion</h2>
+		<p>There are many potential vulnerabilities in this site which must be resolved before the app is ready for public use. There is currently a multitude of ways for a user to destroy the database or even bring down the entire site. I highly recommend implementing more strict regulations and filters for user input and then sanitizing any that make it through. These solutions may have a minor to moderate impact on the efficiency of the application, but it will be minimal compared to the potential havoc that a single malicious input script could cause.
+		</p>
 </body>
 </html>
 
